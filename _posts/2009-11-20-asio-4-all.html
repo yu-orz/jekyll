@@ -1,0 +1,50 @@
+---
+layout: post
+title: ASIO 4 All で音質向上
+date: 2009-11-20 19:35:46.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Windows
+tags: []
+meta:
+  _tiny_url: s:127:"a:3:{s:3:"url";s:29:"http://blog.yu-orz.info/?p=13";s:5:"limit";i:1357434881;s:8:"tiny_url";s:26:"http://tinyurl.com/3wpy6fp";}";
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>今回はPCの音質について触れてみますかね。</p>
+<p>一般的なサウンドカードはレイテンシー（遅延）が大きい。<br />
+<br />すなわち、発音してから実際に音が出るまで時間がかかるらしいです。<br />
+<br />DTMやってる人だと特に。</p>
+<p>また、通常はプレイヤーソフトの負荷を低減させるためにKernelMixerを通るんですが…<br />
+<br />とりあえず音が悪いと。</p>
+<p>で、とあるものを入れると遅延が少なくなり、ついでに音もよくなるらしいです。</p>
+<p>それがASIO 4 All</p>
+<p>ただし、手持ちのカードがASIOに対応して"いない"場合だけ使用してください。<br />
+<br />対応してる場合はASIO 4 Allを導入する意味がないです。</p>
+<p>まあ百聞は一見にしかず。やってみましょ。</p>
+<p><!--more--></p>
+<p>１．ASIO 4 ALLをダウンロード</p>
+<p><strong><a href="http://www.asio4all.com/" target="_blank"><span><span style="font-family: Verdana,sans-serif;">ASIO4ALL - Universal ASIO Driver For WDM Audio</span></span></a></strong></p>
+<p>２．インストール</p>
+<p><img class="alignnone size-full wp-image-74" title="Asio インストール" src="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/11/c1264e036d4214689a739c1d2298a0ea.jpg" alt="Asio インストール" width="513" height="399" /></p>
+<p>Off-Line Settingsにチェック入れてくださいね。</p>
+<p>３．設定</p>
+<p><img class="alignnone size-full wp-image-75" title="ASIO　設定" src="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/11/6e24b9bac51c7f1cd873622eb4b1392c.jpg" alt="ASIO　設定" width="541" height="226" /></p>
+<p>こんな感じです。</p>
+<p>使用しているサウンドカードにチェック（？）を入れておく。</p>
+<p>で、下の<strong>ASIO Buffer Size</strong>を音がぶつぶつ切れない範囲で小さく（左に）しておく。</p>
+<p>４．対応プレイヤー設定</p>
+<p>ASIOに対応しているプレイヤーだと、foobarやLilithがあります。</p>
+<p>うちではLilithを入れたのでその設定から。</p>
+<p>Lilithを右クリック→設定→サウンド関連でこんな感じにする</p>
+<p><img class="alignnone size-full wp-image-76" title="lilith 設定１" src="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/11/c7d57ef793ea6d0a80ec2916e03ce810.jpg" alt="lilith 設定１" width="616" height="526" /></p>
+<p>これでよしっと。</p>
+<p>ASIOで再生中はタスクバーにアイコンが出てるのでご参考に。</p>

@@ -1,0 +1,28 @@
+---
+layout: post
+title: "【備忘録】diffの便利な使い方"
+date: 2012-10-02 22:56:07.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 未分類
+tags: []
+meta:
+  _edit_last: '1'
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+
+<p>またまた備忘録です。<br />「あそこのさーばとここのサーバの、とある設定ファイルのdiffを取りたい」("の"がおおいな)って時ありますよね。<br />無いとは言わせません。</p>
+<p>そんなときはこんな感じ。</p>
+<p>[bash]<br />
+# diff &lt;(ssh hogeserver "cat /etc/hosts") &lt;(ssh hugaserver "cat /etc/hosts")<br />
+[/bash]</p>
+<p>これだけです。<br />鍵認証じゃないとダメです。</p>

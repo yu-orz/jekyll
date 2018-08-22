@@ -1,0 +1,32 @@
+---
+layout: post
+title: Gitlabで急にリポジトリの操作ができなくなった
+date: 2014-04-29 13:20:41.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  mkd_text: "ある日git push したときに \n\n    /usr/bin/env: ruby: そのようなファイルやディレクトリはありません\n\nと出て、リポジトリの操作ができなくなりました。\nどうやらSSHの環境変数がまともに引き継がれていなかったようで、そもそもrubyが見つからなかったようです。\n\ngitユーザの
+    .ssh/environment に PATHを追加してあげればうまくいきました。\n\n    $ vi.ssh/environment\n    PATH=/usr/local/ruby/bin:/usr/local/bin:/bin:/usr/bin"
+  _edit_last: '1'
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>ある日git push したときに </p>
+<pre><code>/usr/bin/env: ruby: そのようなファイルやディレクトリはありません
+</code></pre>
+<p>と出て、リポジトリの操作ができなくなりました。<br />
+どうやらSSHの環境変数がまともに引き継がれていなかったようで、そもそもrubyが見つからなかったようです。</p>
+<p>gitユーザの .ssh/environment に PATHを追加してあげればうまくいきました。</p>
+<pre><code>$ vi.ssh/environment
+PATH=/usr/local/ruby/bin:/usr/local/bin:/bin:/usr/bin
+</code></pre>

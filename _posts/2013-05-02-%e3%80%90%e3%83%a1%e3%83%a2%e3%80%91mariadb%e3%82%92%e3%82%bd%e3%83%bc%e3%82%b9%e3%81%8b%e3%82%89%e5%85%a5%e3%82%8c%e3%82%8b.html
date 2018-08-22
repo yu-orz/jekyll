@@ -1,0 +1,49 @@
+---
+layout: post
+title: "【メモ】MariaDBをソースから入れる"
+date: 2013-05-02 00:51:51.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _edit_last: '1'
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>若干酔っ払ってるので適当です。</p>
+<p>[bash]<br />
+# groupadd mysql<br />
+# useradd -M -s /sbin/nologin -r -g mysql mysql</p>
+<p># /usr/local/src/mariadb-5.5.30<br />
+# cmake -DCMAKE_INSTALL_PREFIX=/opt/mariadb-5.5.30 .<br />
+# make -j3 && make install</p>
+<p># ln -s /opt/mariadb-5.5.30 /usr/local/mysql<br />
+# cd /usr/local/mysql/support-files<br />
+# cp -p mysql.server /etc/init.d/mysql   // basedir,datadirを書き換えたほうが幸せになれるかも</p>
+<p># vim /etc/my.cnf</p>
+<p>[mysqld]<br />
+datadir=/var/lib/mysql<br />
+socket=/tmp/mysql.sock<br />
+pid-file=/var/run/mysqld/mysql.pid<br />
+user=mysql<br />
+symbolic-links=0<br />
+innodb_file_per_table<br />
+innodb_buffer_pool_size=512M<br />
+innodb_log_file_size=64M</p>
+<p>[mysqld_safe]<br />
+log-error=/var/log/mysqld.log<br />
+pid-file=/var/run/mysqld/mysqld.pid</p>
+<p>// これをやる前に $PATHに追加しないとだめっぽい<br />
+# cd /usr/local/mysql/<br />
+# scripts/mysql_install_db</p>
+<p># /etc/init.d/mysql start<br />
+[/bash]</p>

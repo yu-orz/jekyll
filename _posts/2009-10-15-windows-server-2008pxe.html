@@ -1,0 +1,58 @@
+---
+layout: post
+title: Windows Server 2008をPXEブート
+date: 2009-10-15 05:34:25.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Windows
+tags: []
+meta:
+  _tiny_url: s:126:"a:3:{s:3:"url";s:28:"http://blog.yu-orz.info/?p=7";s:5:"limit";i:1357434644;s:8:"tiny_url";s:26:"http://tinyurl.com/7prrwbh";}";
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>実はうちのサブサーバ、DVD-ROMドライブないんです。<br />
+<br /><span class="caps">USB</span>は2GBまでのやつしかないし・・・</p>
+<p>ってことで仮想マシンでWin2008Serverたてて、そこからPXEで物理マシンをブートさせる作戦です。</p>
+<p><!--more--></p>
+<p>前提条件として</p>
+<p>・インストールマシンはPXEブート対応であり、設定が終わってる<br />
+<br />・ネットワーク内にDHCPサーバがある<br />
+<br />・Windows Server 2008に、Windows 展開サービスの役割を追加してある</p>
+<p>こんな感じです。</p>
+<p>では手順。</p>
+<p>１．サーバマネージャからWindows展開サービスをクリックし、サーバを右クリック→サーバの追加。<br />
+<br />ローカルコンピュータを選択しOKをクリック。<br />
+
+<div><a href="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-01-59-431.png"><img class="alignnone size-full wp-image-13" title="Windows Server 2008 x64 Edition-2009-10-15-01-59-43" src="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-01-59-431.png" alt="Windows Server 2008 x64 Edition-2009-10-15-01-59-43" width="384" height="288" /></a></div>
+<p>
+<div>２．インストールイメージを右クリック→インストールイメージの追加をクリック。<br />
+<br />イメージグループの名前（適当でおｋ）を入力し次へ。</p>
+<p><a href="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-02-00-09.png"><img class="alignnone size-full wp-image-17" title="Windows Server 2008 x64 Edition-2009-10-15-02-00-09" src="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-02-00-09.png" alt="Windows Server 2008 x64 Edition-2009-10-15-02-00-09" width="384" height="288" /></a></p>
+<p>３．Windowsイメージ（wim）を指定する。<br />
+<br />Server2008だと、DVD内の\sources\install.wimでした。</div>
+<p>
+<div><a onclick="show( 'http://yuhki-kametaro.ddo.jp/blog/files/b8cfe622efcd290fd993241e98e52574.png',&lt;br &gt;&lt;/a&gt; 'canvas-1',&lt;br /&gt; '03.png',&lt;br /&gt; '1024',&lt;br /&gt; '768'&lt;br /&gt; ) " href="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-02-00-24.png"><img class="alignnone size-full wp-image-18" title="Windows Server 2008 x64 Edition-2009-10-15-02-00-24" src="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-02-00-24.png" alt="Windows Server 2008 x64 Edition-2009-10-15-02-00-24" width="384" height="288" /><br />
+<br /></a></p>
+<p>３．使用するであろうエディションを選択する。俺の場合はStandardだけ。<br />
+<br />ってかLonghorn Serverってなってるのね・・・。</div>
+<p>
+<div><a onclick="show( 'http://yuhki-kametaro.ddo.jp/blog/files/6a3e1222c78866677ca60297a1a09fc2.png',&lt;br &gt;&lt;/a&gt; 'canvas-1',&lt;br /&gt; '04.png',&lt;br /&gt; '1024',&lt;br /&gt; '768'&lt;br /&gt; ) " href="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-02-00-34.png"><img class="alignnone size-full wp-image-19" title="Windows Server 2008 x64 Edition-2009-10-15-02-00-34" src="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-02-00-34.png" alt="Windows Server 2008 x64 Edition-2009-10-15-02-00-34" width="384" height="288" /><br />
+<br /></a></p>
+<p>４．次へ→完了したら、今度はブートイメージを右クリック→ブートイメージの追加。<br />
+<br />X:\sources\boot.wimを指定。</div>
+<p>
+<div><a onclick="show( 'http://yuhki-kametaro.ddo.jp/blog/files/39e6151130b34cdcc842555857ff4ac7.png',&lt;br &gt;&lt;/a&gt; 'canvas-1',&lt;br /&gt; '05.png',&lt;br /&gt; '1024',&lt;br /&gt; '768'&lt;br /&gt; ) " href="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-05-38-18.png"><img class="alignnone size-full wp-image-20" title="Windows Server 2008 x64 Edition-2009-10-15-05-38-18" src="http://yuhki-kametaro.ddo.jp/blog/wp-content/uploads/2009/10/Windows-Server-2008-x64-Edition-2009-10-15-05-38-18.png" alt="Windows Server 2008 x64 Edition-2009-10-15-05-38-18" width="384" height="288" /><br />
+<br /></a></p>
+<p>５．適当に次へをクリックして終了。<br />
+<br />WDS Serverサービスが動いてることを確かめて、あとは物理マシンを起動するだけ。</p>
+<p>実は初めてスクリーンショットをうｐっていう。<br />
+<br />見にくかったらごめんなさい。</div>

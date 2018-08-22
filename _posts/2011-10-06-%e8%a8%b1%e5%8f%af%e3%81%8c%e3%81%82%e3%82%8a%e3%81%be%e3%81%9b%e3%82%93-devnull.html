@@ -1,0 +1,32 @@
+---
+layout: post
+title: 許可がありません /dev/null
+date: 2011-10-06 22:17:20.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _edit_last: '1'
+  _tiny_url: s:130:"a:3:{s:3:"url";s:29:"http://blog.yu-orz.info/?p=35";s:5:"limit";i:1358411093;s:8:"tiny_url";s:29:"http://blog.yu-orz.info/?p=35";}";
+  _twet_result: ''
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>サーバにログインしたら「許可がありません /dev/null」というメッセージが大量に。<br />調べたらまれに/dev/nullが普通のファイルになってしまうらしいです。</p>
+<p>本来は、<br /><strong>crw-rw-rw- 1 root root 1, 3 10月  6 22:12 /dev/null</strong><br />となってなければいけないんですが、</p>
+<p><strong>-rw-r--r-- 1 root root 0 10月  6 22:11 /dev/null</strong><br />こんなかんじ。</p>
+<p>復旧は簡単。</p>
+<p>[bash]<br />
+rm -f /dev/null<br />
+mknod -m 666 /dev/null c 1 3<br />
+[/bash]<br />
+とするだけみたいです。</p>

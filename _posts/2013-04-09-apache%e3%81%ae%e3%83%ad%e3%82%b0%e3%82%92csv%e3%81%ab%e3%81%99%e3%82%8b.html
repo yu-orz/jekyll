@@ -1,0 +1,59 @@
+---
+layout: post
+title: ApacheのログをCSVにする
+date: 2013-04-09 13:50:47.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _edit_last: '1'
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>あんまり需要なさそうなんですが、MySQLなりMongoDBなりにデータを突っ込みやすいので作ってみました。<br />
+公開されてたスクリプトをちょっと改変しただけのものです。</p>
+<p>[perl]<br />
+#!/usr/bin/perl</p>
+<p>use HTTP::Date;</p>
+<p>my $filename = $ARGV[0];<br />
+open(LOGFILE, $filename) || die $!;</p>
+<p>while (<logfile>) {</p>
+<p>#  /^(.*) (.*) (.*) \[(.*)\] "(.*)" (.*) (.*) "(.*)" "(.*)"/;<br />
+#  /^([^ ]*) ([^ ]*) ([^ ]*) \[([^]]*)\] "(.*?)" ([^ ]*) ([^ ]*) "(.*?)" "(.*?)"/;<br />
+  /^([^ ]*) ([^ ]*) ([^ ]*) \[(.*)\] "(.*?)" ([^ ]*) ([^ ]*) "(.*?)" "(.*?)"/;</p>
+<p>  $remotehost = $1;<br />
+  $fromidentd = $2;<br />
+  $remoteuser = $3;<br />
+  $datetime = $4;<br />
+  $httprequest = $5;<br />
+  $httpstatus = $6;<br />
+  $databytes = $7;<br />
+  $refer = $8;<br />
+  $useragent = $9;</p>
+<p>  my $date = str2time($datetime);<br />
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime($date);</p>
+<p>  $hour = sprintf("%02d",$hour);<br />
+  $min = sprintf("%02d",$min);<br />
+  $sec = sprintf("%02d",$sec);<br />
+  $year += 1900;<br />
+  $mon += 1;<br />
+  $mon = sprintf("%02d",$mon);<br />
+  $mday = sprintf("%02d",$mday);<br />
+  $date_new  = "$year-$mon-$mday $hour:$min:$sec";<br />
+  print "$remotehost,$fromidentd,$remoteuser,$date_new,$httprequest,$httpstatus,$databytes,$refer,$useragent";<br />
+  print "\n";<br />
+}</p>
+<p>close(LOGFILE);<br />
+[/perl]</p>
+<p>使い方: ./apache_log.pl access.log</p>
+<p>すごいやっつけで作ったので、あまり綺麗ではないですがさすがPerlですね。<br />
+やっぱ早いです。</logfile></p>

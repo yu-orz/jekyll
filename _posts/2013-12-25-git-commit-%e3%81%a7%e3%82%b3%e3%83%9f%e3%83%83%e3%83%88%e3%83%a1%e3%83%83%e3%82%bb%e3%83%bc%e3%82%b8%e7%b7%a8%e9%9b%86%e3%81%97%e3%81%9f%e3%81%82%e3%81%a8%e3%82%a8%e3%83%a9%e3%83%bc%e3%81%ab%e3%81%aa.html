@@ -1,0 +1,42 @@
+---
+layout: post
+title: git commit でコミットメッセージ編集したあとエラーになる
+date: 2013-12-25 01:47:46.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 未分類
+tags: []
+meta:
+  mkd_text: |-
+    なぜか git commit してコミットメッセージ入力した後に以下エラーが出る場合。
+
+        error: There was a problem with the editor 'vi'.
+        Please supply the message using either -m or -F option.
+
+    とか出る場合、.zshrcなり.bashrcなりに以下を追加する。
+
+        export GIT_EDITOR=`which vim`
+  _edit_last: '1'
+  is_noamp: ''
+  is_nofollow: ''
+  is_noindex: ''
+  is_comment_form_freeze: ''
+  is_ads_removed_in_page: ''
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>なぜか git commit してコミットメッセージ入力した後に以下エラーが出る場合。</p>
+<pre><code>error: There was a problem with the editor 'vi'.
+Please supply the message using either -m or -F option.
+</code></pre>
+<p>とか出る場合、.zshrcなり.bashrcなりに以下を追加する。</p>
+<pre><code>export GIT_EDITOR=`which vim`
+</code></pre>

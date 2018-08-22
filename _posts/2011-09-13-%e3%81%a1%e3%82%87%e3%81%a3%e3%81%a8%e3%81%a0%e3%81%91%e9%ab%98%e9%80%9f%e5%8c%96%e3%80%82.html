@@ -1,0 +1,45 @@
+---
+layout: post
+title: ちょっとだけ高速化。
+date: 2011-09-13 21:35:48.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _edit_last: '1'
+  _tiny_url: s:127:"a:3:{s:3:"url";s:29:"http://blog.yu-orz.info/?p=23";s:5:"limit";i:1357441341;s:8:"tiny_url";s:26:"http://tinyurl.com/3fth37y";}";
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>巷ではMiraclePatchみたいなものがあるそうですが、お手軽に出来る方法です。<br /><!--more--><br />~/.bashrcに以下を追加。</p>
+<p>[bash]<br />
+if [ "$PS1" ] ; then<br />
+  mkdir -m 0700 /cgroup/cpu/user/$<br />
+  echo $ &gt; /cgroup/cpu/user/$/tasks<br />
+fi<br />
+[/bash]</p>
+<p>&nbsp;</p>
+<p>次に、/etc/rc.localに以下を追加。</p>
+<p>[bash]<br />
+mkdir -p -m 0777 /cgroup/cpu/user<br />
+[/bash]</p>
+<p>んでもって、ネットワーク周りのチューニングです。<br />/etc/sysctl.confに以下を追加。</p>
+<p>[bash]<br />
+net.core.rmem_default = 524288  # ここの数値は各自変えてください。<br />
+net.core.rmem_max = 524288<br />
+net.core.wmem_default = 524288<br />
+net.core.wmem_max = 524288<br />
+net.ipv4.tcp_wmem = 4096 65536 524288<br />
+net.ipv4.tcp_rmem = 4096 87380 524288<br />
+[/bash]</p>
+<p>その後、sysctl -p で反映。</p>
+<p>体感できるほど早くなりました。<br />特にSamba周り。</p>

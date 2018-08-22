@@ -1,0 +1,57 @@
+---
+layout: post
+title: ログをトラップするスクリプト
+date: 2011-12-05 21:15:34.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _tiny_url: s:127:"a:3:{s:3:"url";s:29:"http://blog.yu-orz.info/?p=51";s:5:"limit";i:1357433132;s:8:"tiny_url";s:26:"http://tinyurl.com/7wew2l4";}";
+  _edit_last: '1'
+  _twet_result: ''
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>ほぼ備忘録です。<br /> /var/log/messagesとかにはかれた一定の文字列を検知するだけ。 例として、pptpのログインを検知。<br />
+ちなみに、こいつはデーモンとして動かします。</p>
+<p>
+ちなみにかなり適当です。<br />
+rmが変数になってるのにtail他はそのままだったり。</p>
+<p>[bash]<br />
+#!/bin/sh</p>
+<p>LOG="/var/log/messages"<br />
+LOG2="/var/log/pptpd_login.log"<br />
+MAIN_PID_FILE="/tmp/pptpdwatch.pid"<br />
+RM_CMD="/bin/rm -f"</p>
+<p>## PID<br />
+MAIN_PID=$$<br />
+echo ${MAIN_PID} > ${MAIN_PID_FILE}</p>
+<p>## pptpd is running?<br />
+ps -fp `cat /var/run/pptpd.pid` > /dev/null 2>&1<br />
+RC=$?<br />
+if [ ${RC} -eq 1 ]; then<br />
+  echo "pptpd not running. (Process is Not Found)"<br />
+  echo "I Can't run. Good bye..."<br />
+  exit 1<br />
+fi</p>
+<p>## main<br />
+tail -n 1 --follow=name ${LOG} | while read line<br />
+do<br />
+  echo ${line} | grep -e "ip-up" -e "ip-down" > /dev/null<br />
+  RET=$?<br />
+  if [ ${RET} -eq 0 ]; then<br />
+     echo ${line} | awk '{print $1,$2,$3,$7,$8,$9,$10}' >> ${LOG2}<br />
+  fi<br />
+done</p>
+<p>TAIL_PID=`ps -ef | grep $$ | grep tail | grep -v grep | awk '{print $2}'`</p>
+<p>trap 'kill ${TAIL_PID} && kill ${MAIN_PID} && rm -f ${MAIN_PID_FILE}' 1 2 3 15<br />
+[/bash]</p>

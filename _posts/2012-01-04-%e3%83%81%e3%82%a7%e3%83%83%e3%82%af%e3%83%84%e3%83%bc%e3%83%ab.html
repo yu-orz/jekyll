@@ -1,0 +1,426 @@
+---
+layout: post
+title: チェックツール
+date: 2012-01-04 17:47:06.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _edit_last: '1'
+  _tiny_url: s:127:"a:3:{s:3:"url";s:29:"http://blog.yu-orz.info/?p=64";s:5:"limit";i:1357433021;s:8:"tiny_url";s:26:"http://tinyurl.com/6sz34aj";}";
+  _twet_result: ''
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>あけましておめでとうございます。<br />あっという間に年が変わってました。</p>
+<p>ということで、いつも何気なく使っている自作のツールの紹介パート2です。<br />ちなみにパート1は前回の<a title="ログをトラップするスクリプト" href="http://blog.yu-orz.info/?p=51">ログをトラップするスクリプト</a>です。</p>
+<p><!--more-->サーバが重いとかなにかあったとき、自分でひたすらコマンドを打つのもいいんですが<br />それだと<del>指が疲れる</del>ちょっとめんどくさい気がしませんか？<br />少なくとも私は面倒です。</p>
+<p>そこで自分が打ちそうなコマンドをシェルスクリプトにしてみました。<br />やはり例のごとく自分で使ってるだけなので、変数の命名規則が変だったりします。<br />そのうちgithubにでもあげます。いつか。</p>
+<p>[bash]<br />
+#!/bin/bash</p>
+<p>## Created 11/12/08(Fri)<br />
+## Last Modified 11/12/20(Tue)<br />
+## Added Header And Readme<br />
+## Require w3m and banner</p>
+<p>## Commands</p>
+<p>_ipaddrchk="/root/script/ipaddrchk.sh"<br />
+_ping_ip="kuro" # IP Address or Hostname<br />
+_ping_outside="google.co.jp" # Outside IP Address or Hostname</p>
+<p>## NG Flag<br />
+NG=0</p>
+<p>_arch=`uname -o`</p>
+<p>case ${_arch} in<br />
+  *Linux*)<br />
+  ;;<br />
+  *FreeBSD*)<br />
+  echo "OS is not suppuorted."<br />
+  echo "I Can't run..."<br />
+  exit 1<br />
+  ;;<br />
+  *)<br />
+  echo "OS is not suppuorted."<br />
+  echo "I Can't run..."<br />
+  ;;<br />
+esac</p>
+<p>head(){<br />
+  echo "=================="<br />
+  echo "Linux System Check"<br />
+  echo "=================="</p>
+<p>  echo "=================="<br />
+  echo "Host is `uname -n`"<br />
+  echo "=================="<br />
+}</p>
+<p>## Current IP Address</p>
+<p>local_ip(){<br />
+  echo<br />
+  echo "## Current Local IP Address ##"<br />
+  echo "`ifconfig eth0 | grep "inet addr" | awk '{print $2}' | cut -d : -f 2`"<br />
+}</p>
+<p>cur_ip(){<br />
+  echo<br />
+  echo "## Current Global IP Address ##"<br />
+  w3m http://checkip.dyndns.org/ -dump > /tmp/ipaddrchk.dat<br />
+  RC=$?<br />
+  if [ -f /tmp/ipaddrchk.dat ] && [ ${RC} -eq 0 ]; then<br />
+    echo "`cat /tmp/ipaddrchk.dat | cut -d : -f 2 | sed 's/ //g'`"<br />
+    else<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+    fi<br />
+    rm -f /tmp/ipaddrchk.dat<br />
+    echo<br />
+}</p>
+<p>## Running VMS List<br />
+run_vms(){<br />
+  echo "## Current Running VMS ##"<br />
+  VBoxManage list runningvms<br />
+  echo<br />
+}</p>
+<p>## Disk Usage</p>
+<p>  disk_usage(){<br />
+  echo "## Disk Usage ##"<br />
+  df -hP<br />
+  echo<br />
+}</p>
+<p>## Temp Check<br />
+temp_check(){<br />
+  LANG=C<br />
+  CPU0_TEMP=`ipmitool sdr | grep "CPU0 Dmn0 Temp" | sed 's/  */ /g' | awk '{print $5,$6,$7}'`<br />
+#  SDA_TEMP=`hddtemp /dev/sda`<br />
+#  SDB_TEMP=`hddtemp /dev/sdb`<br />
+#  SDC_TEMP=`hddtemp /dev/sdc`<br />
+#  SDD_TEMP=`hddtemp /dev/sdd`<br />
+  echo "## Sensors ##"<br />
+  echo "CPU0: ${CPU0_TEMP}"<br />
+#   echo "${SDA_TEMP}"<br />
+#   echo "${SDB_TEMP}"<br />
+#   echo "${SDC_TEMP}"<br />
+#   echo "${SDD_TEMP}"<br />
+  echo ""<br />
+}</p>
+<p>## Checking Mounted Filesystems</p>
+<p>mnt_fs(){<br />
+  echo -n \<br />
+  "Total Mounts Filesystems   : "<br />
+  echo -n<br />
+  MOUNT_FS=` mount | wc -l`<br />
+  echo "${MOUNT_FS} / 14"<br />
+  echo<br />
+}</p>
+<p>## ping check<br />
+ping_check(){<br />
+  echo -n \<br />
+  "Ping Check is localhost    : "<br />
+  ping -c1 -t1 127.0.0.1 > /dev/null<br />
+  if [ $? -eq 0 ]; then<br />
+    echo -n<br />
+    echo "OK!"<br />
+  else<br />
+    echo -n<br />
+    echo "** NG!! **"<br />
+    NG=1<br />
+  fi</p>
+<p>  echo -n \<br />
+#  "Ping Check is kuro         : "<br />
+#  ping -c1 -t1 ${_ping_ip} > /dev/null<br />
+#  if [ $? -eq 0 ]; then<br />
+#      echo -n<br />
+#      echo "OK!"<br />
+#    else<br />
+#      echo -n<br />
+#      echo "** NG!! **"<br />
+#      NG=1<br />
+#    fi</p>
+<p>  echo -n \<br />
+  "Ping Check is Outside      : "<br />
+  ping -c2 ${_ping_outside} > /dev/null<br />
+  #echo $?<br />
+  if [ $? -eq 0 ]; then<br />
+      echo -n<br />
+      echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+    fi<br />
+}</p>
+<p>## pptpd process<br />
+pptpd_check(){<br />
+  echo -n \<br />
+  "PPTPD Process Check        : "<br />
+  ps -fp `cat /var/run/pptpd.pid` > /dev/null 2>&1<br />
+  RC=$?<br />
+  if [ ${RC} -eq 0 ]; then<br />
+    echo -n<br />
+    echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+  fi</p>
+<p>  echo -n \<br />
+  "PPTPD watch Process Check  : "<br />
+  ps aux | grep pptpdwatch.sh | grep -v grep > /dev/null<br />
+  RC=$?<br />
+  if [ ${RC} -eq 0 ]; then<br />
+    echo -n<br />
+    echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+  fi<br />
+}</p>
+<p>## pptpd login users<br />
+pptpd_login_users(){<br />
+  echo -n \<br />
+  "PPTPD Login Users          : "<br />
+  USERS=`/root/script/pptplogin.sh now | wc -l`<br />
+  echo ${USERS}<br />
+}</p>
+<p>## httpd check<br />
+## PID File $G8+$k$h$&$K$7$H$/</p>
+<p>httpd_check(){<br />
+  echo -n \<br />
+  "HTTPD Process Check        : "<br />
+  ps aux | grep httpd | grep -v grep > /dev/null<br />
+  RC=$?<br />
+  if [ ${RC} -eq 0 ]; then<br />
+    echo -n<br />
+    echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+  fi<br />
+}</p>
+<p>## samba check<br />
+samba_check(){<br />
+  echo -n \<br />
+  "Samba Process Check        : "<br />
+  ps aux | grep smbd | grep -v grep 2>&1 > /dev/null<br />
+  RC=$?<br />
+  if [ ${RC} -eq 0 ]; then<br />
+    echo -n<br />
+    echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+  fi<br />
+}</p>
+<p>## named_check<br />
+named_check(){<br />
+  echo -n \<br />
+  "Named Process Check        : "<br />
+  ps aux | grep named | grep -v grep 2>&1 > /dev/null<br />
+  RC=$?<br />
+  if [ ${RC} -eq 0 ]; then<br />
+    echo -n<br />
+   # echo -n "\t \t"<br />
+    echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+  fi<br />
+}</p>
+<p>## dhcpd check<br />
+dhcpd_check(){<br />
+  echo -n \<br />
+  "DHCPD Process Check        : "<br />
+  ps aux | grep dhcpd | grep -v grep > /dev/null<br />
+  RC=$?<br />
+  if [ ${RC} -eq 0 ]; then<br />
+    echo -n<br />
+    echo "OK!"<br />
+    else<br />
+      echo -n<br />
+    #  echo -n "\t \t"<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+  fi</p>
+<p>  echo -n \<br />
+  "DHCPD watch Process Check  : "<br />
+  ps aux | grep dhcpdwatch.sh | grep -v grep > /dev/null<br />
+  RC=$?<br />
+  if [ ${RC} -eq 0 ]; then<br />
+  echo -n<br />
+  echo "OK!"<br />
+  else<br />
+  echo -n<br />
+  echo "** NG!! **"<br />
+  NG=1<br />
+  fi<br />
+}</p>
+<p>## ypserv check<br />
+ypserv_check(){<br />
+  echo -n \<br />
+  "ypserv Process Check       : "<br />
+  if [ -f /var/run/ypserv.pid ]; then<br />
+    ps -fp `cat /var/run/ypserv.pid` > /dev/null<br />
+    RC=$?<br />
+    if [ ${RC} -eq 0 ]; then<br />
+      echo -n<br />
+      echo "OK!"<br />
+      else<br />
+        echo -n<br />
+        echo "** NG!! **"<br />
+        NG=1<br />
+    fi<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+  fi<br />
+}</p>
+<p>## Aipo Running Check<br />
+aipo_check(){<br />
+  echo -n \<br />
+  "Aipo Running Check         : "<br />
+  ps aux | grep aipo | grep -v grep 2>&1 > /dev/null<br />
+  RC=$?<br />
+  if [ ${RC} -eq 0 ]; then<br />
+    echo -n<br />
+    echo "OK!"<br />
+  else<br />
+    echo -n<br />
+    echo "** NG!! **"<br />
+    NG=1<br />
+  fi<br />
+}</p>
+<p>mysql_check(){<br />
+  echo -n \<br />
+  "MySQL Running Check        : "<br />
+  if [ -f /var/run/mysqld/mysqld.pid ]; then<br />
+    ps -fp `cat /var/run/mysqld/mysqld.pid` 2>&1 > /dev/null<br />
+    RC=$?<br />
+    if [ ${RC} -eq 0 ]; then<br />
+      echo -n<br />
+      echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+    fi<br />
+  else<br />
+    echo -n<br />
+    echo "** NG!! **"<br />
+    NG=1<br />
+  fi<br />
+}</p>
+<p>mysql_repl_check(){<br />
+  SLAVE_SERVER="kuro"<br />
+  MYSQL_USER="root"<br />
+  MYSQL_PASSWD=""<br />
+  echo -n \<br />
+  "MySQL Replication Check    : "<br />
+  IO_RUN_STATUS=`ssh ${SLAVE_SERVER} "mysql -u ${MYSQL_USER} -p${MYSQL_PASSWD} -e 'show slave status\G'" | grep Slave_IO_Running | awk '{print $2}'`<br />
+  SQL_RUN_STATUS=`ssh ${SLAVE_SERVER} "mysql -u ${MYSQL_USER} -p${MYSQL_PASSWD} -<br />
+e 'show slave status\G'" | grep Slave_SQL_Running | awk '{print $2}'`<br />
+  if [ "x${IO_RUN_STATUS}" = "xYes" -a "x${SQL_RUN_STATUS}" = "xYes" ]; then<br />
+    echo -n<br />
+    echo "OK!"<br />
+  else<br />
+    echo -n<br />
+    echo "** NG!! **"<br />
+    NG=1<br />
+  fi<br />
+}</p>
+<p>pmsd_check(){<br />
+  echo -n \<br />
+  "PMS Running Check          : "<br />
+  if [ -f /var/run/pms.pid ]; then<br />
+    ps -fp `cat /var/run/pms.pid` 2>&1 > /dev/null<br />
+    RC=$?<br />
+    if [ ${RC} -eq 0 ]; then<br />
+      echo -n<br />
+      echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+    fi<br />
+  else<br />
+    echo -n<br />
+    echo "** NG!! **"<br />
+    NG=1<br />
+  fi<br />
+}</p>
+<p>vbox_check(){<br />
+  echo -n \<br />
+  "VBox Running Check         : "<br />
+    ps -ef | grep "vboxwebsrv" | grep -v grep 2>&1 > /dev/null<br />
+    RC=$?<br />
+    if [ ${RC} -eq 0 ]; then<br />
+      echo -n<br />
+      echo "OK!"<br />
+    else<br />
+      echo -n<br />
+      echo "** NG!! **"<br />
+      NG=1<br />
+    fi<br />
+}</p>
+<p>dovecot_check(){<br />
+  echo -n \<br />
+  "Dovecot Running Check      : "<br />
+   ps -fp `cat /var/run/dovecot/master.pid` 2>&1 > /dev/null<br />
+   RC=$?<br />
+   if [ ${RC} -eq 0 ]; then<br />
+     echo -n<br />
+     echo "OK!"<br />
+   else<br />
+     echo -n<br />
+     echo "** NG!! **"<br />
+     NG=1<br />
+   fi<br />
+}</p>
+<p>postfix_check(){<br />
+  echo -n \<br />
+  "Postfix Running Check      : "<br />
+   ps -fp `cat /var/spool/postfix/pid/master.pid` 2>&1 > /dev/null<br />
+   RC=$?<br />
+   if [ ${RC} -eq 0 ]; then<br />
+     echo -n<br />
+     echo "OK!"<br />
+   else<br />
+     echo -n<br />
+     echo "** NG!! **"<br />
+     NG=1<br />
+   fi<br />
+}</p>
+<p>## main<br />
+head<br />
+local_ip<br />
+cur_ip<br />
+run_vms<br />
+disk_usage<br />
+temp_check<br />
+mnt_fs<br />
+ping_check<br />
+pptpd_check<br />
+httpd_check<br />
+samba_check<br />
+named_check<br />
+#dhcpd_check<br />
+#ypserv_check<br />
+pptpd_login_users<br />
+mysql_check<br />
+#mysql_repl_check<br />
+pmsd_check<br />
+vbox_check<br />
+dovecot_check<br />
+postfix_check</p>
+<p>if [ ${NG} -eq 1 ]; then<br />
+  banner "m9(^^) NG!!"<br />
+fi<br />
+[/bash]</p>

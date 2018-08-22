@@ -1,0 +1,75 @@
+---
+layout: post
+title: カーネル再構築
+date: 2009-10-23 00:41:08.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _tiny_url: s:127:"a:3:{s:3:"url";s:29:"http://blog.yu-orz.info/?p=16";s:5:"limit";i:1357435001;s:8:"tiny_url";s:26:"http://tinyurl.com/3gkxy2y";}";
+  _edit_last: '1'
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>どうやら新しいカーネル(2.6.31.4)が出てるらしいので入れてみる。</p>
+<p>ちなみに環境はFedora 9 (2.6.27.25-78.2.56.fc9.i686)</p>
+<p></p>
+<p><!--more--><br />
+<br />まずカーネルソースのダウンロード。</p>
+<p>[bash]<br />
+# cd /usr/src/kernels/<br />
+# wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.31.4.tar.bz2<br />
+[/bash]</p>
+<p>そして展開<br />
+[bash]<br />
+# tar xvf linux-2.6.31.4.tar.bz2<br />
+# cd linux-2.6.31.4<br />
+# make oldconfig<br />
+# make menuconfig<br />
+[/bash]<br />
+<br />
+●VMware-server使ってる人は以下の手順の前にちょっと読んでください。</p>
+<p>どうやらKernel2.6.30以上から、VMware関連を動作させる場合にパッチ当てが必要だそうです。<br />
+[bash]<br />
+# cd ~<br />
+# wget http://www.insecure.ws/warehouse/vmware-update-2.6.31-5.5.9.tar.bz2<br />
+# tar xvf vmware-update-2.6.31-5.5.9.tar.bz2<br />
+# vim /usr/src/kernels/linux-2.6.31.4/arch/x86/kernel/init_task.c<br />
+[/bash]<br />
+最終行に以下を追加<br />
+[bash]<br />
+EXPORT_UNUSED_SYMBOL(init_mm);<br />
+[/bash]<br />
+<br />一通り設定し終えたら<br />
+<br />
+[bash]<br />
+# make clean<br />
+# make -j2 bzImage &amp;&amp; make -j2 modules &amp;&amp; make  modules_install &amp;&amp; make install<br />
+  ## -j2は、CPU数に応じて変更してください。<br />
+[/bash]</p>
+<p>コンパイルとインストールにはながーい時間がかかります。<br />
+<br />
+で、終わったら起動イメージの変更。<br />
+<br />
+[bash]<br />
+# vim /boot/grub/grub.conf<br />
+[/bash]</p>
+<p>Defaultを0にして保存し、再起動。</p>
+<p>起動後にuname -rでインストールしたカーネルになっていれば成功。<br />
+<br />さて、VMwareの人はもうちょっとやることがあります。<br />
+<br />
+[bash]<br />
+# cd ~/vmware-update-2.6.31-5.5.9<br />
+# ./runme.pl<br />
+[/bash]</p>
+<p>指示に従ってvmモジュールの再インストール。</p>
+<p>簡単に書いたけど、実はvmwareに躓いてすごい時間かかかった(´・ω・｀)</p>

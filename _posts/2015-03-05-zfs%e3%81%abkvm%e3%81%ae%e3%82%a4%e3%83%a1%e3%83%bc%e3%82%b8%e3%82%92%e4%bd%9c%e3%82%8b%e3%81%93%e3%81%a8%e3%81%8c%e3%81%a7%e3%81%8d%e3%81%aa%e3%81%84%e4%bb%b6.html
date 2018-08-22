@@ -1,0 +1,48 @@
+---
+layout: post
+title: ZFSにKVMのイメージを作ることができない件
+date: 2015-03-05 22:35:24.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  mkd_text: "ある日、ZFSでマウントしているディレクトリにKVMのイメージを作ろうとしたら\r\n\r\n    ERROR    内部エラー モニターに接続中にプロセスが終了しました:
+    char device redirected to /dev/pts/3\r\n    2015-03-05T13:23:59.352180Z qemu-kvm:
+    -drive file=/mnt/data/orz-vm-centos7.img,if=none,id=drive-virtio-disk0,format=raw,cache=none:
+    could not open disk image /mnt/data/orz-vm-centos7.img: Invalid argument\r\n    \r\n
+    \   Domain installation does not appear to have been successful.\r\n    If it
+    was, you can restart your domain by running:\r\n      virsh --connect qemu:///system
+    start orz-vm-centos7\r\n    otherwise, please restart your installation.\r\n\r\nって感じで怒られる。\r\nどうやらZFSでマウントしているのがいけないらしく、ZVOLで仮想ボリュームを作ることによって解決しました。\r\n\r\n
+    \   # zfs create -V 60G tank/zvol\r\n    # ls -l /dev/zd0\r\n    # mkfs -t ext4
+    /dev/zd0\r\n    # mount -t ext4 /dev/zd0 /mnt/virt\r\n\r\nそれにしても重い･･･。"
+  _edit_last: '1'
+  _wp_old_slug: powerdns%e3%82%92bind%e3%81%aeslave%e3%81%a8%e3%81%97%e3%81%a6%e6%a7%8b%e7%af%89%e3%81%99%e3%82%8b
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>ある日、ZFSでマウントしているディレクトリにKVMのイメージを作ろうとしたら</p>
+<pre><code>ERROR    内部エラー モニターに接続中にプロセスが終了しました: char device redirected to /dev/pts/3
+2015-03-05T13:23:59.352180Z qemu-kvm: -drive file=/mnt/data/orz-vm-centos7.img,if=none,id=drive-virtio-disk0,format=raw,cache=none: could not open disk image /mnt/data/orz-vm-centos7.img: Invalid argument
+
+Domain installation does not appear to have been successful.
+If it was, you can restart your domain by running:
+  virsh --connect qemu:///system start orz-vm-centos7
+otherwise, please restart your installation.
+</code></pre>
+<p>って感じで怒られる。<br />
+どうやらZFSでマウントしているのがいけないらしく、ZVOLで仮想ボリュームを作ることによって解決しました。</p>
+<pre><code># zfs create -V 60G tank/zvol
+# ls -l /dev/zd0
+# mkfs -t ext4 /dev/zd0
+# mount -t ext4 /dev/zd0 /mnt/virt
+</code></pre>
+<p>それにしても重い･･･。</p>

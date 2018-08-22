@@ -1,0 +1,103 @@
+---
+layout: post
+title: vim + markdown + wordpress
+date: 2013-11-02 12:48:29.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 未分類
+tags:
+- vim
+meta:
+  mkd_text: "Vim で Wordpress の記事を書きたいなーついでに Markdown で書きたいなーということでやってみました。\r\n\r\n##
+    Vunble のインストール\r\n\r\n数多くのプラグインをインストールするため、 vundle を導入します。  \r\n\r\n[bash]\r\n
+    \   $ mkdir ~/.vim\r\n    $ cd ~/.vim\r\n    $ git clone http://github.com/gmarik/vundle.git\r\n[/bash]\r\n\r\n.vimrc
+    に数行追加します。\r\n\r\n[bash]\r\n    $ vim ~/.vimrc\r\n[/bash]\r\n\r\n    filetype off\r\n
+    \   set rtp+=~/.vim/vundle.git/\r\n    call vundle#rc()\r\n \r\n    \" ここからリポジトリ\r\n
+    \   Bundle \"rails.vim\"\r\n    Bundle \"grep.vim\"\r\n    Bundle \"The-NERD-tree\"\r\n
+    \   Bundle \"syntastic\"\r\n    Bundle 'tpope/vim-markdown'\r\n    Bundle 'tyru/open-browser.vim'\r\n
+    \   Bundle 'thinca/vim-quickrun'\r\n    Bundle \"vim-scripts/VimRepress\"\r\n
+    \   Bundle 'Shougo/neocomplcache'\r\n    Bundle \"tpope/vim-fugitive\"\r\n    Bundle
+    \"kannokanno/previm\"\r\n    Bundle \"git://git.wincent.com/command-t.git\"\r\n\r\n
+    \   filetype plugin indent on\r\n\r\n    \"filetype\r\n    autocmd BufNewFile,BufRead
+    *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown\r\n\r\n上記を追加して vim を開き `:BundleInstall`
+    を実行すればOK\r\n\r\n## Markdownの準備\r\n[bash]\r\n    $ sudo easy_install Markdown\r\n[/bash]\r\n\r\n##
+    Wordpressへの投稿\r\n\r\n.vimpressrc に以下を追加します。\r\n\r\n    [Blog0]  \r\n    blog_url
+    = BlogのURL\r\n    username = ユーザ名\r\n    password = パスワード\r\n\r\n以上で準備完了です。\r\n\r\n##
+    使い方\r\n\r\n### 記事一覧\r\n    :BlogList\r\n### 新規追加\r\n    :BlogNew\r\n### 投稿\r\n
+    \   :BlogSave public    (公開)\r\n    :BlogSave           (Draft)\r\n## プレビュー\r\n
+    \   :BlogPreview\r\n\r\n\r\n難しそうに見えないけど、最初は手間でした。"
+  _edit_last: '1'
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>Vim で Wordpress の記事を書きたいなーついでに Markdown で書きたいなーということでやってみました。</p>
+<h2>Vunble のインストール</h2>
+<p>数多くのプラグインをインストールするため、 vundle を導入します。  </p>
+<p>[bash]<br />
+    $ mkdir ~/.vim<br />
+    $ cd ~/.vim<br />
+    $ git clone http://github.com/gmarik/vundle.git<br />
+[/bash]</p>
+<p>.vimrc に数行追加します。</p>
+<p>[bash]<br />
+    $ vim ~/.vimrc<br />
+[/bash]</p>
+<pre><code>filetype off
+set rtp+=~/.vim/vundle.git/
+call vundle#rc()
+
+" ここからリポジトリ
+Bundle "rails.vim"
+Bundle "grep.vim"
+Bundle "The-NERD-tree"
+Bundle "syntastic"
+Bundle 'tpope/vim-markdown'
+Bundle 'tyru/open-browser.vim'
+Bundle 'thinca/vim-quickrun'
+Bundle "vim-scripts/VimRepress"
+Bundle 'Shougo/neocomplcache'
+Bundle "tpope/vim-fugitive"
+Bundle "kannokanno/previm"
+Bundle "git://git.wincent.com/command-t.git"
+
+filetype plugin indent on
+
+"filetype
+autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+</code></pre>
+<p>上記を追加して vim を開き <code>:BundleInstall</code> を実行すればOK</p>
+<h2>Markdownの準備</h2>
+<p>[bash]<br />
+    $ sudo easy_install Markdown<br />
+[/bash]</p>
+<h2>Wordpressへの投稿</h2>
+<p>.vimpressrc に以下を追加します。</p>
+<pre><code>[Blog0]  
+blog_url = BlogのURL
+username = ユーザ名
+password = パスワード
+</code></pre>
+<p>以上で準備完了です。</p>
+<h2>使い方</h2>
+<h3>記事一覧</h3>
+<pre><code>:BlogList
+</code></pre>
+<h3>新規追加</h3>
+<pre><code>:BlogNew
+</code></pre>
+<h3>投稿</h3>
+<pre><code>:BlogSave public    (公開)
+:BlogSave           (Draft)
+</code></pre>
+<h2>プレビュー</h2>
+<pre><code>:BlogPreview
+</code></pre>
+<p>難しそうに見えないけど、最初は手間でした。</p>

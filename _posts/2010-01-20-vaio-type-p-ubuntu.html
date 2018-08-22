@@ -1,0 +1,45 @@
+---
+layout: post
+title: VAIO Type-P で ubuntu
+date: 2010-01-20 01:54:11.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+- ハードウェア
+tags: []
+meta:
+  _tiny_url: s:127:"a:3:{s:3:"url";s:29:"http://blog.yu-orz.info/?p=17";s:5:"limit";i:1357526820;s:8:"tiny_url";s:26:"http://tinyurl.com/4228ox3";}";
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>VAIOのtypeP(VGN-P70H)<br />ちなみにワンセグモデル。
+<div>もワンセグとかどうでもいいし、デフォルトのVistaが死ぬほど重たくてどうにかなりそうなので<br />ubuntu 9.10 入れてみようと思います。</div>
+<p><!--more--><br />
+<br />
+<h4>前提</h4>
+<p>リカバリパーティションは残す<br />ワンセグは使わない<br />ついでにWindows 残す</p>
+<p>あくまで自分の環境なので、ご自身の環境にあわせてください。</p>
+<p>Windows消すなりリカバリ消すなり。<br />
+<h4>認識するデバイス</h4>
+<p>グラフィック： ドライバ入れればファンクションキーでの輝度調整も出来る<br />サウンド： 問題なし<br />無線LAN： 問題なし<br />カメラ： 問題なし<br />
+<h4>インストール</h4>
+<p>普通にインストールします。特記することはとくにないかも。<br />
+<h4>初期設定</h4>
+<p>まずまっさきにアップデートします。<br />ただしカーネルだけはアップデートしないでください。</p>
+<p># apt-get update<br /># apt-get upgrade</p>
+<p>次にグラフィックドライバを落とす。<br /># wget http://gma500re.altervista.org/scripts/poulsbo_ppa.sh</p>
+<p>インストール<br /># sh poulsbo_ppa.sh</p>
+<p>終わったら grub の設定を変えます。<br /># vi /etc/default/grub</p>
+<p>GRUB_CMDLINE_LINUX_DEFAULT="quiet"<br />GRUB_CMDLINE_LINUX="mem=2000mb"</p>
+<p>編集したら適用する<br /># update-grub</p>
+<p>再起動<br /># reboot</p>
+<p>これで終わり。<br />音も出るし輝度調整もできます。</p>
+<p>また続くかも。</p>

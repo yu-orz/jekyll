@@ -1,0 +1,45 @@
+---
+layout: post
+title: 小ネタ
+date: 2009-12-12 15:17:47.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _edit_last: '1'
+  _tiny_url: s:126:"a:3:{s:3:"url";s:28:"http://blog.yu-orz.info/?p=8";s:5:"limit";i:1357441345;s:8:"tiny_url";s:26:"http://tinyurl.com/4xdh4en";}";
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+<p>Unix・Linuxにはだいたいある<strong>ddコマンド。<br /></strong>今日はそれについての小ネタです。</p>
+<p>まあHDDのフルバックアップとかに使う...<br />
+[bash]<br />
+dd if=/dev/sda1 of=/dev/sda2<br />
+[/bash]<br />
+とか</p>
+<p>逆にHDDの中身を跡形もなく消す[bash]<br />
+dd if=/dev/zero of=/dev/sda<br />
+[/bash]<br />
+↑をもうちょっと強力にする<br />
+[bash]<br />
+dd if=/dev/zero of=/dev/sda ;\<br />
+dd if=/dev/urandom of=/dev/sda ;\<br />
+dd if=/dev/zero of=/dev/sda<br />
+[/bash]<br />
+そんなddコマンド。<br />実はシステムを簡単に落とせるらしいんです。<br /><span style="color: #ff0000;"><strong><br />※実行は自己責任でお願いします。</strong></span></p>
+<p><span style="color: #000000;"><br />
+[bash]<br />
+dd if=/dev/zero of=/dev/mem<br />
+[/bash]<br />
+要するに、<strong>メモリ上にあるデータをzeroで上書きしちゃう</strong>って言う。<br />やってみたら見事に落ちました。<br />まあそりゃそうだよね。</p>
+<p>/dev/memをcatしてみるとおもしろいかもｗ</p>
+<p>以上、小ネタでした。</span></p>

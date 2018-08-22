@@ -1,0 +1,33 @@
+---
+layout: post
+title: sshfsって便利。
+date: 2012-10-08 22:51:04.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _edit_last: '1'
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+
+<p>レンタルサーバを別に借りたので、自宅サーバとレンタルサーバでファイルの受け渡しが簡単にできないかなーと。 そこで思いついたのがsshfsです。 簡単に言うと、ssh経由でリモートサーバのディレクトリをマウント出来るファイルシステムがこれ。</p>
+<p>以下、CentOS6でのインストール方法と使い方です。<br /> <br />
+[bash]<br />
+# yum -y install sshfs<br />
+ [/bash]<br />
+インストール自体はこれで完了で、使い方です。<br />
+[bash]<br />
+# sshfs user@server:/path/to/dir /mnt/dir    # マウント<br />
+# fusermount -u /mnt/dir                     # アンマウント<br />
+[/bash]</p>
+<p>これでNFSのように使用できます。<br />注意点としては、sshfsでマウントしたユーザにしかこのディレクトリは見えません。<br />設定かマウントオプションで変えられるかもしれませんが。。</p>

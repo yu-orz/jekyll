@@ -1,0 +1,29 @@
+---
+layout: post
+title: 'journal rollforward failed: journal out of sync with zone が出て名前解決が出来ない'
+date: 2012-07-10 11:50:33.000000000 +09:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags: []
+meta:
+  _edit_last: '1'
+  _tiny_url: s:127:"a:3:{s:3:"url";s:29:"http://blog.yu-orz.info/?p=68";s:5:"limit";i:1358855039;s:8:"tiny_url";s:26:"http://tinyurl.com/7zupk5o";}";
+  _twet_result: ''
+author:
+  login: yuki
+  email: yuki@yu-orz.info
+  display_name: ぴーやま
+  first_name: ''
+  last_name: ''
+---
+
+<p>CentOS6.2で、bindを起動する際、「journal rollforward failed: journal out of sync with zone」というエラーが出て名前解決が出来なくなりました。 その対応メモ。</p>
+<p>bind + dhcpd の DDNS を使っている環境で、直接ZONEファイルの編集をするとダメらしいです。<br /> zone.jnl と不整合が発生するみたいですね。</p>
+<p>対処法は単純に、*.jnlを削除するだけ。</p>
+<p>じゃあどーやってレコード更新すればいいんですかね。</p>
+<p>&nbsp;</p>
